@@ -7,6 +7,45 @@
 //
 
 #import "AppDelegate.h"
+#import "execinfo.h"
+#import "libkern/OSAtomic.h"
+
+static void HandleException(NSException *exception) {
+    NSLog(@"name = %@\nreason = %@\n\n%@", exception.name, exception.reason, exception.callStackSymbols);
+}
+
+volatile int32_t CrashCount = 0;
+const int32_t CrashMaximum = 10;
+
+NSArray* crashBacktrace() {
+    void* callstack[128];
+    int frames = backtrace(callstack, 128);
+    char **strs = backtrace_symbols(callstack, frames);
+    
+    NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
+    for (int i=0; i<10; i++) {
+        if (strs[i] != NULL) {
+            [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
+        } else {
+            [backtrace addObject:@""];
+        }
+    }
+    
+    free(strs);
+    
+    return backtrace;
+}
+
+static void SignalHandler(int signal) {
+    int32_t exceptionCount = OSAtomicIncrement32(&CrashCount);
+    if (exceptionCount > CrashMaximum) {
+        return;
+    }
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithInt:signal] forKey:@"singnalType"];
+    NSArray *callStack = crashBacktrace();
+    [userInfo setObject:callStack forKey:@"stack"];
+    NSLog(@"%@", userInfo);
+}
 
 @interface AppDelegate ()
 
@@ -16,7 +55,17 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    NSLog(@"didFinishLaunch");
+    NSSetUncaughtExceptionHandler(&HandleException);
+    
+    signal(SIGABRT, &SignalHandler);
+    signal(SIGILL, &SignalHandler);
+    signal(SIGSEGV, &SignalHandler);
+    signal(SIGFPE, &SignalHandler);
+    signal(SIGBUS, &SignalHandler);
+    signal(SIGPIPE, &SignalHandler);
+    // make a crash
+//    [self performSelector:@selector(debug) withObject:nil afterDelay:3];
     return YES;
 }
 

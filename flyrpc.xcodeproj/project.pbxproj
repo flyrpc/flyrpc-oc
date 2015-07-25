@@ -14,6 +14,12 @@
 		6774409E1B56477B0006F17B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6774409D1B56477B0006F17B /* Images.xcassets */; };
 		677440A11B56477B0006F17B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6774409F1B56477B0006F17B /* LaunchScreen.xib */; };
 		677440AD1B56477B0006F17B /* flyrpcTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440AC1B56477B0006F17B /* flyrpcTests.m */; };
+		677440ED1B57B3C50006F17B /* FlyProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440EC1B57B3C50006F17B /* FlyProtocol.m */; };
+		677440EF1B57C1340006F17B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677440EE1B57C1340006F17B /* CFNetwork.framework */; };
+		677440F91B5921F70006F17B /* Documentation.html in Resources */ = {isa = PBXBuildFile; fileRef = 677440F41B5921F70006F17B /* Documentation.html */; };
+		677440FA1B5921F70006F17B /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F61B5921F70006F17B /* GCDAsyncSocket.m */; };
+		677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */; };
+		677440FE1B5FA7360006F17B /* FlyPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440FD1B5FA7360006F17B /* FlyPacket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +46,16 @@
 		677440A61B56477B0006F17B /* flyrpcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = flyrpcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		677440AB1B56477B0006F17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		677440AC1B56477B0006F17B /* flyrpcTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = flyrpcTests.m; sourceTree = "<group>"; };
+		677440EB1B57B3C50006F17B /* FlyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyProtocol.h; path = flyrpc_framework/FlyProtocol.h; sourceTree = "<group>"; };
+		677440EC1B57B3C50006F17B /* FlyProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyProtocol.m; path = flyrpc_framework/FlyProtocol.m; sourceTree = "<group>"; };
+		677440EE1B57C1340006F17B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		677440F41B5921F70006F17B /* Documentation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Documentation.html; sourceTree = "<group>"; };
+		677440F51B5921F70006F17B /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		677440F61B5921F70006F17B /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		677440F71B5921F70006F17B /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
+		677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
+		677440FC1B5FA7360006F17B /* FlyPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyPacket.h; path = flyrpc_framework/FlyPacket.h; sourceTree = "<group>"; };
+		677440FD1B5FA7360006F17B /* FlyPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyPacket.m; path = flyrpc_framework/FlyPacket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				677440EF1B57C1340006F17B /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +80,7 @@
 		677440841B56477B0006F17B = {
 			isa = PBXGroup;
 			children = (
+				677440EE1B57C1340006F17B /* CFNetwork.framework */,
 				6774408F1B56477B0006F17B /* flyrpc */,
 				677440A91B56477B0006F17B /* flyrpcTests */,
 				6774408E1B56477B0006F17B /* Products */,
@@ -81,6 +99,8 @@
 		6774408F1B56477B0006F17B /* flyrpc */ = {
 			isa = PBXGroup;
 			children = (
+				677440F31B5921F70006F17B /* CocoaAsyncSocket */,
+				677440B61B5649820006F17B /* flyrpc_framework */,
 				677440941B56477B0006F17B /* AppDelegate.h */,
 				677440951B56477B0006F17B /* AppDelegate.m */,
 				677440971B56477B0006F17B /* ViewController.h */,
@@ -117,6 +137,30 @@
 				677440AB1B56477B0006F17B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		677440B61B5649820006F17B /* flyrpc_framework */ = {
+			isa = PBXGroup;
+			children = (
+				677440EB1B57B3C50006F17B /* FlyProtocol.h */,
+				677440EC1B57B3C50006F17B /* FlyProtocol.m */,
+				677440FC1B5FA7360006F17B /* FlyPacket.h */,
+				677440FD1B5FA7360006F17B /* FlyPacket.m */,
+			);
+			name = flyrpc_framework;
+			sourceTree = "<group>";
+		};
+		677440F31B5921F70006F17B /* CocoaAsyncSocket */ = {
+			isa = PBXGroup;
+			children = (
+				677440F41B5921F70006F17B /* Documentation.html */,
+				677440F51B5921F70006F17B /* GCDAsyncSocket.h */,
+				677440F61B5921F70006F17B /* GCDAsyncSocket.m */,
+				677440F71B5921F70006F17B /* GCDAsyncUdpSocket.h */,
+				677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */,
+			);
+			name = CocoaAsyncSocket;
+			path = vendor/CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,6 +212,7 @@
 				TargetAttributes = {
 					6774408C1B56477B0006F17B = {
 						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = H8K9MN5387;
 					};
 					677440A51B56477B0006F17B = {
 						CreatedOnToolsVersion = 6.3;
@@ -202,6 +247,7 @@
 				6774409C1B56477B0006F17B /* Main.storyboard in Resources */,
 				677440A11B56477B0006F17B /* LaunchScreen.xib in Resources */,
 				6774409E1B56477B0006F17B /* Images.xcassets in Resources */,
+				677440F91B5921F70006F17B /* Documentation.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,8 +266,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				677440991B56477B0006F17B /* ViewController.m in Sources */,
+				677440FA1B5921F70006F17B /* GCDAsyncSocket.m in Sources */,
 				677440961B56477B0006F17B /* AppDelegate.m in Sources */,
 				677440931B56477B0006F17B /* main.m in Sources */,
+				677440FE1B5FA7360006F17B /* FlyPacket.m in Sources */,
+				677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */,
+				677440ED1B57B3C50006F17B /* FlyProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,9 +399,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LU LEI (7M2HG9LRPT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: LU LEI (7M2HG9LRPT)";
 				INFOPLIST_FILE = flyrpc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c5606eee-f532-43d4-a0d9-054f16a4ecca";
+				SWIFT_OBJC_BRIDGING_HEADER = "flyrpc/flyrpc-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -359,9 +417,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LU LEI (7M2HG9LRPT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: LU LEI (7M2HG9LRPT)";
 				INFOPLIST_FILE = flyrpc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c5606eee-f532-43d4-a0d9-054f16a4ecca";
+				SWIFT_OBJC_BRIDGING_HEADER = "flyrpc/flyrpc-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -418,6 +483,7 @@
 				677440B21B56477B0006F17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		677440B31B56477B0006F17B /* Build configuration list for PBXNativeTarget "flyrpcTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +492,7 @@
 				677440B51B56477B0006F17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
