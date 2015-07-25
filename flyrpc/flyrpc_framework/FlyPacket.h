@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface FlyPacket : NSObject
+@property(nonatomic, assign) bool isRequest;
+@property(nonatomic, assign) bool isResponse;
+@property(nonatomic, assign) bool waitResponse;
 @property(nonatomic, assign) uint64_t length;
 @property(nonatomic, assign) uint8_t flag;
 @property(nonatomic, retain) NSString* code;

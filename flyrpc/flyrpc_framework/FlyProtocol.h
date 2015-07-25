@@ -10,27 +10,28 @@
 #import "GCDAsyncSocket.h"
 #import <Foundation/Foundation.h>
 
-@protocol FlyProtocolDelegate<GCDAsyncSocketDelegate>
-@required
-- (void)socket:(GCDAsyncSocket *)sock didRequest:(FlyPacket *)packet;
+@class FlyProtocol;
+
+@protocol FlyProtocolDelegate
 @optional
-- (void)socket:(GCDAsyncSocket *)sock didReadPacket:(FlyPacket *)packet;
-- (void)socket:(GCDAsyncSocket *)sock didResponse:(FlyPacket *)packet;
+- (void)fly:(FlyProtocol *)conn didConnectToHost:(NSString*)host port:(uint16_t)port;
+- (void)flyDidDisconnect:(FlyProtocol *)conn withError:(NSError*)err;
+- (void)fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet;
+- (void)fly:(FlyProtocol *)conn receiveRequest:(FlyPacket *)packet;
+- (void)fly:(FlyProtocol *)conn receiveResponse:(FlyPacket *)packet;
 @end
 
-@interface FlyProtocol : NSObject<FlyProtocolDelegate>
+@interface FlyProtocol : NSObject<GCDAsyncSocketDelegate>
 {
-//    NSInputStream *inputStream;
-//    NSOutputStream *outputStream;
     GCDAsyncSocket* asyncSocket;
     FlyPacket* currentPacket;
     uint16_t nextSeq;
 }
-
-- (id) init;
-- (void)setup:(NSString*)host port:(int)port;
-
-@property (strong) NSString *test;
-
-
+@property (atomic, weak, readwrite) id<FlyProtocolDelegate> delegate;
+- (id)initWithDelegate:(id<FlyProtocolDelegate>)delegate;
+- (void) connectToHost:(NSString*)host port:(int)port;
+- (void) sendRequest:(NSString*)code payload:(NSData*)payload;
+- (void) sendResponse:(uint16_t)seq code:(NSString*)code payload:(NSData*)payload;
+- (void) sendPacket:(FlyPacket*) packet;
+- (void) disconnect;
 @end

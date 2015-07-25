@@ -19,8 +19,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    flyProtocol = [[FlyProtocol alloc] init];
-    [flyProtocol setup:@"localhost" port:3456];
+    flyProtocol = [[FlyProtocol alloc] initWithDelegate:self];
+    [flyProtocol connectToHost:@"localhost" port:3456];
+    [self sayHello];
     
 /*
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
@@ -42,10 +43,33 @@
  */
 }
 
+- (void) sayHello {
+    [flyProtocol sendRequest:@"echo" payload:[@"blabla" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self performSelector:@selector(sayHello) withObject:nil afterDelay:3];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void) fly:(FlyProtocol *)conn didConnectToHost:(NSString *)host port:(uint16_t)port {
+    NSLog(@"did connect to host");
+}
+
+- (void) fly:(FlyProtocol *)conn receiveRequest:(FlyPacket *)packet {
+    NSLog(@"did receiveRequest %@", packet.code);
+}
+
+- (void) fly:(FlyProtocol *)conn receiveResponse:(FlyPacket *)packet {
+    NSLog(@"did receiveResponse %@", packet.payload);
+}
+
+- (void) fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet {
+    NSLog(@"did receive packet %@", packet.code, packet.payload);
+}
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

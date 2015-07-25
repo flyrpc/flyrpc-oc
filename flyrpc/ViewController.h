@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FlyProtocol.h"
 
 @class GCDAsyncSocket;
 @class FlyProtocol;
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<FlyProtocolDelegate>
 {
     FlyProtocol* flyProtocol;
-    GCDAsyncSocket* asyncSocket;
+//    GCDAsyncSocket* asyncSocket;
 }
 
 

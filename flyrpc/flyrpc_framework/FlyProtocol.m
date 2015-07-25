@@ -27,33 +27,28 @@
 
 @implementation FlyProtocol
 
-- (id) init {
+- (id)initWithDelegate:(id<FlyProtocolDelegate>)delegate {
     self = [super init];
-    printf("Init\n");
-    if (self) {
-        printf("Init self\n");
-    }
+    _delegate = delegate;
+    asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     return self;
 }
 
-- (void)setup:(NSString*)host port:(int)port {
+- (void)connectToHost:(NSString *)host port:(int)port {
     NSLog(@"Connecting to %@ %d", host, port);
-    asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     NSError *err = nil;
     if (![asyncSocket connectToHost:host onPort:port error:&err])
     {
         NSLog(@"Error connecting: %@", err);
     }
-    [self sayHello];
-}
-
-- (void) sayHello {
-    [self sendRequest:@"echo" payload:[@"blabla" dataUsingEncoding:NSUTF8StringEncoding]];
-    [self performSelector:@selector(sayHello) withObject:asyncSocket afterDelay:3];
 }
 
 - (void) readNextPacket:(GCDAsyncSocket *) sock {
     [sock readDataToLength:SIZE_FLAG withTimeout:-1 tag: TAG_FLAG];
+}
+
+- (void) disconnect {
+    [asyncSocket disconnect];
 }
 
 - (void) sendRequest:(NSString*)code payload:(NSData*)payload {
@@ -76,6 +71,12 @@
 
 - (void) sendPacket:(FlyPacket*) packet {
     // prepare packet
+    if (packet.isResponse) {
+        packet.flag |= FLAG_RESPONSE;
+    }
+    if (packet.waitResponse) {
+        packet.flag |= FLAG_WAIT_RESPONSE;
+    }
     if (packet.length == 0) {
         packet.length = packet.payload.length;
     }
@@ -137,6 +138,7 @@
  **/
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     NSLog(@"Connected to host");
+    [self.delegate fly:self didConnectToHost:host port:port];
     [self readNextPacket:sock];
 }
 
@@ -145,11 +147,14 @@
  * Not called if there is an error.
  **/
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    NSLog(@"Read data %ld - %@", tag, data);
+    // NSLog(@"Read data %ld - %@", tag, data);
     if(tag == TAG_FLAG) {
         // 初始化packet
         currentPacket = [[FlyPacket alloc]init];
         currentPacket.flag = *(uint8_t *)data.bytes;
+        currentPacket.isResponse = (currentPacket.flag & FLAG_RESPONSE) != 0;
+        currentPacket.isRequest = !currentPacket.isResponse;
+        currentPacket.waitResponse = (currentPacket.flag & FLAG_WAIT_RESPONSE) != 0;
         [sock readDataToLength:SIZE_SEQUENCE withTimeout:DEFAULT_TIMEOUT tag:TAG_SEQUENCE];
     } else if(tag == TAG_SEQUENCE) {
         currentPacket.seq = CFSwapInt16BigToHost(*(uint16_t*)data.bytes);
@@ -191,7 +196,13 @@
         [sock readDataToLength:length withTimeout:DEFAULT_TIMEOUT tag:TAG_PAYLOAD];
     } else if(tag == TAG_PAYLOAD) {
         currentPacket.payload = data;
-        // 如何调用delegate的方法 [sock didReadPacket:currentPacket];
+        [self.delegate fly:self didReadPacket:currentPacket];
+        if (currentPacket.isResponse) {
+            [self.delegate fly:self receiveResponse:currentPacket];
+        } else {
+            [self.delegate fly:self receiveRequest:currentPacket];
+        }
+
         NSLog(@"ReadPacket %@ %@ %lu", currentPacket.code, currentPacket.payload, (unsigned long)data.length);
         [self readNextPacket:sock];
                 // TODO CRC??
@@ -200,6 +211,10 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     NSLog(@"Did disconnect %@", err);
+    __strong id theDelegate = _delegate;
+    if (theDelegate != nil && [theDelegate respondsToSelector:@selector(flyDidDisconnect:withError:)]) {
+        [theDelegate flyDidDisconnect:self withError:err];
+    }
 }
 
 @end
