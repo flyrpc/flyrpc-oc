@@ -25,7 +25,14 @@
 #define FLAG_WAIT_RESPONSE  0x40
 
 
+
+
 @implementation FlyProtocol
+{
+    GCDAsyncSocket* asyncSocket;
+    FlyPacket* currentPacket;
+    uint16_t nextSeq;
+}
 
 - (id)initWithDelegate:(id<FlyProtocolDelegate>)delegate {
     self = [super init];
@@ -51,6 +58,10 @@
     [asyncSocket disconnect];
 }
 
+- (void) request:(NSString *)code payload:(NSData *)payload responseDelegate:(id<FlyResponseDelegate>)delegate {
+    NSLog(@"not implement");
+}
+
 - (void) sendRequest:(NSString*)code payload:(NSData*)payload {
     FlyPacket* packet = [[FlyPacket alloc] init];
     packet.flag = FLAG_WAIT_RESPONSE;
@@ -64,6 +75,15 @@
     FlyPacket* packet = [[FlyPacket alloc] init];
     packet.flag = FLAG_RESPONSE;
     packet.seq = seq;
+    packet.code = code;
+    packet.payload = payload;
+    [self sendPacket:packet];
+}
+
+- (void) sendMessage:(NSString *)code payload:(NSData *)payload {
+    FlyPacket* packet = [[FlyPacket alloc] init];
+    packet.flag = 0;
+    packet.seq = ++nextSeq;
     packet.code = code;
     packet.payload = payload;
     [self sendPacket:packet];
@@ -127,6 +147,24 @@
     [asyncSocket writeData:buff withTimeout:DEFAULT_TIMEOUT tag:0];
 }
 
+-(void) didReadPacket:(FlyPacket*)packet {
+    id<FlyProtocolDelegate> theDelegate = _delegate;
+    if (packet.isResponse) {
+        if (theDelegate && [theDelegate respondsToSelector:@selector(fly:receiveResponse:)]) {
+            [self.delegate fly:self receiveResponse:packet];
+        }
+    } else if(packet.waitResponse){
+        if (theDelegate && [theDelegate respondsToSelector:@selector(fly:receiveRequest:response:)]) {
+            FlyOutResponse* response = [[FlyOutResponse alloc]initWithRequest:packet fly:self];
+            [self.delegate fly:self receiveRequest:packet response:response];
+        }
+    } else {
+        if (theDelegate != nil && [theDelegate respondsToSelector:@selector(fly:receiveMessage:)]) {
+            [self.delegate fly:self receiveMessage:packet];
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Socket Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +176,10 @@
  **/
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     NSLog(@"Connected to host");
-    [self.delegate fly:self didConnectToHost:host port:port];
+    __strong id<FlyProtocolDelegate> theDelegate = _delegate;
+    if (theDelegate != nil || [theDelegate respondsToSelector:@selector(fly:didConnectToHost:port:)]) {
+        [self.delegate fly:self didConnectToHost:host port:port];
+    }
     [self readNextPacket:sock];
 }
 
@@ -196,13 +237,7 @@
         [sock readDataToLength:length withTimeout:DEFAULT_TIMEOUT tag:TAG_PAYLOAD];
     } else if(tag == TAG_PAYLOAD) {
         currentPacket.payload = data;
-        [self.delegate fly:self didReadPacket:currentPacket];
-        if (currentPacket.isResponse) {
-            [self.delegate fly:self receiveResponse:currentPacket];
-        } else {
-            [self.delegate fly:self receiveRequest:currentPacket];
-        }
-
+        [self didReadPacket:currentPacket];
         NSLog(@"ReadPacket %@ %@ %lu", currentPacket.code, currentPacket.payload, (unsigned long)data.length);
         [self readNextPacket:sock];
                 // TODO CRC??
@@ -211,7 +246,7 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     NSLog(@"Did disconnect %@", err);
-    __strong id theDelegate = _delegate;
+    __strong id<FlyProtocolDelegate> theDelegate = _delegate;
     if (theDelegate != nil && [theDelegate respondsToSelector:@selector(flyDidDisconnect:withError:)]) {
         [theDelegate flyDidDisconnect:self withError:err];
     }

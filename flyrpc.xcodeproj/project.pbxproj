@@ -20,6 +20,7 @@
 		677440FA1B5921F70006F17B /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F61B5921F70006F17B /* GCDAsyncSocket.m */; };
 		677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */; };
 		677440FE1B5FA7360006F17B /* FlyPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440FD1B5FA7360006F17B /* FlyPacket.m */; };
+		67865B831B6511540070CE27 /* FlyOutResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 67865B821B6511540070CE27 /* FlyOutResponse.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
 		677440FC1B5FA7360006F17B /* FlyPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyPacket.h; path = flyrpc_framework/FlyPacket.h; sourceTree = "<group>"; };
 		677440FD1B5FA7360006F17B /* FlyPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyPacket.m; path = flyrpc_framework/FlyPacket.m; sourceTree = "<group>"; };
+		67865B811B6511540070CE27 /* FlyOutResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyOutResponse.h; path = flyrpc_framework/FlyOutResponse.h; sourceTree = "<group>"; };
+		67865B821B6511540070CE27 /* FlyOutResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyOutResponse.m; path = flyrpc_framework/FlyOutResponse.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +149,8 @@
 				677440EC1B57B3C50006F17B /* FlyProtocol.m */,
 				677440FC1B5FA7360006F17B /* FlyPacket.h */,
 				677440FD1B5FA7360006F17B /* FlyPacket.m */,
+				67865B811B6511540070CE27 /* FlyOutResponse.h */,
+				67865B821B6511540070CE27 /* FlyOutResponse.m */,
 			);
 			name = flyrpc_framework;
 			sourceTree = "<group>";
@@ -270,6 +275,7 @@
 				677440961B56477B0006F17B /* AppDelegate.m in Sources */,
 				677440931B56477B0006F17B /* main.m in Sources */,
 				677440FE1B5FA7360006F17B /* FlyPacket.m in Sources */,
+				67865B831B6511540070CE27 /* FlyOutResponse.m in Sources */,
 				677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */,
 				677440ED1B57B3C50006F17B /* FlyProtocol.m in Sources */,
 			);

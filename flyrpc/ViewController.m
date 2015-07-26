@@ -66,7 +66,7 @@
 }
 
 - (void) fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet {
-    NSLog(@"did receive packet %@", packet.code, packet.payload);
+    NSLog(@"did receive packet %@ %@", packet.code, packet.payload);
 }
 
 
