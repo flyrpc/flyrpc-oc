@@ -19,22 +19,18 @@
 - (void)flyDidDisconnect:(FlyProtocol *)conn withError:(NSError*)err;
 // TODO: make it thread safe and concurrent.
 // - (void)fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet;
-- (void)fly:(FlyProtocol *)conn receiveMessage:(FlyPacket *)message;
-- (void)fly:(FlyProtocol *)conn receiveRequest:(FlyPacket *)request response:(FlyOutResponse*)response;
-- (void)fly:(FlyProtocol *)conn receiveResponse:(FlyPacket *)response;
-@end
-
-@protocol FlyResponseDelegate <NSObject>
-- (void)fly:(FlyProtocol *)conn receiveResponse:(FlyPacket *)response ofRequest:(FlyPacket*)request;
+- (void)fly:(FlyProtocol *)conn didReceiveMessage:(FlyPacket *)message;
+- (void)fly:(FlyProtocol *)conn didReceiveRequest:(FlyPacket *)request response:(FlyOutResponse*)response;
+- (void)fly:(FlyProtocol *)conn didReceiveResponse:(FlyPacket *)response withTag:(long)tag;
+- (void)flyFailToRequest:(FlyProtocol *)conn withTag:(long)tag;
 @end
 
 @interface FlyProtocol : NSObject<GCDAsyncSocketDelegate>
-@property (atomic, weak, readwrite) id<FlyProtocolDelegate> delegate;
-- (id)initWithDelegate:(id<FlyProtocolDelegate>)delegate;
+@property (readonly) bool connected;
+@property (atomic, weak) id<FlyProtocolDelegate> delegate;
 - (void) connectToHost:(NSString*)host port:(int)port;
-- (void) request:(NSString*)code payload:(NSData*)payload responseDelegate:(id<FlyResponseDelegate>)delegate;
 - (void) sendMessage:(NSString*)code payload:(NSData*)payload;
-- (void) sendRequest:(NSString*)code payload:(NSData*)payload;
+- (void) sendRequest:(NSString*)code payload:(NSData*)payload withTimeout:(NSTimeInterval)timeout tag:(long)tag;
 - (void) sendResponse:(uint16_t)seq code:(NSString*)code payload:(NSData*)payload;
 // - (void) sendPacket:(FlyPacket*) packet;
 - (void) disconnect;
