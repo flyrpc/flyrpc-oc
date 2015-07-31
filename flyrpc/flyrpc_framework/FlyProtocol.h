@@ -21,7 +21,7 @@
 // - (void)fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet;
 - (void)fly:(FlyProtocol *)conn didReceiveMessage:(FlyPacket *)message;
 - (void)fly:(FlyProtocol *)conn didReceiveRequest:(FlyPacket *)request response:(FlyOutResponse*)response;
-- (void)fly:(FlyProtocol *)conn didReceiveResponse:(FlyPacket *)response withTag:(long)tag;
+- (void)fly:(FlyProtocol *)conn didReceiveResponse:(FlyPacket *)response withTag:(NSString*)tag;
 - (void)flyFailToRequest:(FlyProtocol *)conn withTag:(long)tag;
 @end
 
@@ -30,7 +30,7 @@
 @property (atomic, weak) id<FlyProtocolDelegate> delegate;
 - (void) connectToHost:(NSString*)host port:(int)port;
 - (void) sendMessage:(NSString*)code payload:(NSData*)payload;
-- (void) sendRequest:(NSString*)code payload:(NSData*)payload withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+- (void) sendRequest:(NSString*)code payload:(NSData*)payload withTimeout:(NSTimeInterval)timeout tag:(NSString*)tag;
 - (void) sendResponse:(uint16_t)seq code:(NSString*)code payload:(NSData*)payload;
 // - (void) sendPacket:(FlyPacket*) packet;
 - (void) disconnect;

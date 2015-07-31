@@ -57,17 +57,13 @@
     [asyncSocket disconnect];
 }
 
-- (void) request:(NSString *)code payload:(NSData *)payload {
-    NSLog(@"not implement");
-}
-
-- (void) sendRequest:(NSString*)code payload:(NSData*)payload withTimeout:(NSTimeInterval)timeout tag:(long)tag{
+- (void) sendRequest:(NSString*)code payload:(NSData*)payload withTimeout:(NSTimeInterval)timeout tag:(NSString*)tag{
     FlyPacket* packet = [[FlyPacket alloc] init];
     packet.flag = FLAG_WAIT_RESPONSE;
     packet.seq = ++nextSeq;
     packet.code = code;
     packet.payload = payload;
-    [dictSeqToTag setObject:[NSNumber numberWithLong:tag] forKey:[NSNumber numberWithShort:packet.seq]];
+    [dictSeqToTag setObject:tag forKey:[NSNumber numberWithShort:packet.seq]];
     [self sendPacket:packet];
 }
 
@@ -151,9 +147,9 @@
     if (packet.isResponse) {
         if (_delegate && [_delegate respondsToSelector:@selector(fly:didReceiveResponse:withTag:)]) {
             NSNumber* seq = [NSNumber numberWithShort:packet.seq];
-            NSNumber* tagNum = [dictSeqToTag objectForKey:seq];
+            NSString* tag = [dictSeqToTag objectForKey:seq];
             [dictSeqToTag removeObjectForKey:seq];
-            [_delegate fly:self didReceiveResponse:packet withTag:[tagNum longValue]];
+            [_delegate fly:self didReceiveResponse:packet withTag:tag];
         }
     } else if(packet.waitResponse){
         if (_delegate && [_delegate respondsToSelector:@selector(fly:didReceiveRequest:response:)]) {
