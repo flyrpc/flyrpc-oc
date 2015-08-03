@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "FlyPacket.h"
 
-@class FlyProtocol;
+@class FlyRPC;
 
 @interface FlyOutResponse : NSObject
 @property bool sent;
-@property (nonatomic, readonly) FlyProtocol* conn;
+@property (nonatomic, readonly) FlyRPC* conn;
 @property (nonatomic, readonly) FlyPacket* request;
-- (id) initWithRequest:(FlyPacket*)request fly:(FlyProtocol*)conn;
+- (id) initWithRequest:(FlyPacket*)request fly:(FlyRPC*)conn;
 - (void) send:(NSString*)code payload:(NSData*)payload;
 @end

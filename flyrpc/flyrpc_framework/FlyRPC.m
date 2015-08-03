@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 林 桂. All rights reserved.
 //
 
-#import "FlyProtocol.h"
+#import "FlyRPC.h"
 #import "GCDAsyncSocket.h"
 
 #define DEFAULT_TIMEOUT     5
@@ -24,7 +24,7 @@
 #define FLAG_RESPONSE       0x80
 #define FLAG_WAIT_RESPONSE  0x40
 
-@implementation FlyProtocol
+@implementation FlyRPC
 {
     GCDAsyncSocket* asyncSocket;
     FlyPacket* currentPacket;
@@ -63,8 +63,25 @@
     packet.seq = ++nextSeq;
     packet.code = code;
     packet.payload = payload;
-    [dictSeqToTag setObject:tag forKey:[NSNumber numberWithShort:packet.seq]];
+    NSNumber* seqNum = [NSNumber numberWithShort:packet.seq];
+    [dictSeqToTag setObject:tag forKey: seqNum];
+    // wait timeout
+    [self performSelector:@selector(timeUp:) withObject:seqNum afterDelay:timeout];
     [self sendPacket:packet];
+}
+
+- (void) timeUp:(NSNumber*)seq {
+    NSString* tag = [dictSeqToTag objectForKey:seq];
+    // not responsed
+    if(tag != nil) {
+        // implement the method
+        if (_delegate && [_delegate respondsToSelector:@selector(rpcRequestTimeout:withTag:)]) {
+            // call fail
+            [_delegate rpcRequestTimeout:self withTag:tag];
+        }
+        // remove key
+        [dictSeqToTag removeObjectForKey:seq];
+    }
 }
 
 - (void) sendResponse:(uint16_t)seq code:(NSString*)code payload:(NSData*)payload {
@@ -145,20 +162,22 @@
 
 -(void) didReadPacket:(FlyPacket*)packet {
     if (packet.isResponse) {
-        if (_delegate && [_delegate respondsToSelector:@selector(fly:didReceiveResponse:withTag:)]) {
-            NSNumber* seq = [NSNumber numberWithShort:packet.seq];
-            NSString* tag = [dictSeqToTag objectForKey:seq];
+        NSNumber* seq = [NSNumber numberWithShort:packet.seq];
+        NSString* tag = [dictSeqToTag objectForKey:seq];
+        if ([dictSeqToTag objectForKey:seq]!=nil) {
+            if (_delegate && [_delegate respondsToSelector:@selector(rpc:didReceiveResponse:withTag:)]) {
+                [_delegate rpc:self didReceiveResponse:packet withTag:tag];
+            }
             [dictSeqToTag removeObjectForKey:seq];
-            [_delegate fly:self didReceiveResponse:packet withTag:tag];
         }
     } else if(packet.waitResponse){
-        if (_delegate && [_delegate respondsToSelector:@selector(fly:didReceiveRequest:response:)]) {
+        if (_delegate && [_delegate respondsToSelector:@selector(rpc:didReceiveRequest:response:)]) {
             FlyOutResponse* response = [[FlyOutResponse alloc]initWithRequest:packet fly:self];
-            [_delegate fly:self didReceiveRequest:packet response:response];
+            [_delegate rpc:self didReceiveRequest:packet response:response];
         }
     } else {
-        if (_delegate != nil && [_delegate respondsToSelector:@selector(fly:didReceiveMessage:)]) {
-            [_delegate fly:self didReceiveMessage:packet];
+        if (_delegate != nil && [_delegate respondsToSelector:@selector(rpc:didReceiveMessage:)]) {
+            [_delegate rpc:self didReceiveMessage:packet];
         }
     }
 }
@@ -174,8 +193,8 @@
  **/
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     NSLog(@"Connected to host");
-    if (_delegate != nil || [_delegate respondsToSelector:@selector(fly:didConnectToHost:port:)]) {
-        [_delegate fly:self didConnectToHost:host port:port];
+    if (_delegate != nil || [_delegate respondsToSelector:@selector(rpc:didConnectToHost:port:)]) {
+        [_delegate rpc:self didConnectToHost:host port:port];
     }
     [self readNextPacket:sock];
 }
@@ -245,8 +264,8 @@
     NSLog(@"Did disconnect %@", err);
     if (_connected) {
         _connected = false;
-        if (_delegate != nil && [_delegate respondsToSelector:@selector(flyDidDisconnect:withError:)]) {
-            [_delegate flyDidDisconnect:self withError:err];
+        if (_delegate != nil && [_delegate respondsToSelector:@selector(rpcDidDisconnect:withError:)]) {
+            [_delegate rpcDidDisconnect:self withError:err];
         }
     }
 }
@@ -254,8 +273,8 @@
 - (void)socketDidCloseReadStream:(GCDAsyncSocket *)sock {
     if (_connected) {
         _connected = false;
-        if (_delegate != nil && [_delegate respondsToSelector:@selector(flyDidDisconnect:withError:)]) {
-            [_delegate flyDidDisconnect:self withError:nil];
+        if (_delegate != nil && [_delegate respondsToSelector:@selector(rpcDidDisconnect:withError:)]) {
+            [_delegate rpcDidDisconnect:self withError:nil];
         }
     }
 }

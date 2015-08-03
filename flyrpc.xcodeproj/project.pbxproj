@@ -14,8 +14,7 @@
 		6774409E1B56477B0006F17B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6774409D1B56477B0006F17B /* Images.xcassets */; };
 		677440A11B56477B0006F17B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6774409F1B56477B0006F17B /* LaunchScreen.xib */; };
 		677440AD1B56477B0006F17B /* flyrpcTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440AC1B56477B0006F17B /* flyrpcTests.m */; };
-		677440ED1B57B3C50006F17B /* FlyProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440EC1B57B3C50006F17B /* FlyProtocol.m */; };
-		677440EF1B57C1340006F17B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677440EE1B57C1340006F17B /* CFNetwork.framework */; };
+		677440ED1B57B3C50006F17B /* FlyRPC.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440EC1B57B3C50006F17B /* FlyRPC.m */; };
 		677440F91B5921F70006F17B /* Documentation.html in Resources */ = {isa = PBXBuildFile; fileRef = 677440F41B5921F70006F17B /* Documentation.html */; };
 		677440FA1B5921F70006F17B /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F61B5921F70006F17B /* GCDAsyncSocket.m */; };
 		677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 677440F81B5921F70006F17B /* GCDAsyncUdpSocket.m */; };
@@ -47,9 +46,8 @@
 		677440A61B56477B0006F17B /* flyrpcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = flyrpcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		677440AB1B56477B0006F17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		677440AC1B56477B0006F17B /* flyrpcTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = flyrpcTests.m; sourceTree = "<group>"; };
-		677440EB1B57B3C50006F17B /* FlyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyProtocol.h; path = flyrpc_framework/FlyProtocol.h; sourceTree = "<group>"; };
-		677440EC1B57B3C50006F17B /* FlyProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyProtocol.m; path = flyrpc_framework/FlyProtocol.m; sourceTree = "<group>"; };
-		677440EE1B57C1340006F17B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		677440EB1B57B3C50006F17B /* FlyRPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlyRPC.h; path = flyrpc_framework/FlyRPC.h; sourceTree = "<group>"; };
+		677440EC1B57B3C50006F17B /* FlyRPC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlyRPC.m; path = flyrpc_framework/FlyRPC.m; sourceTree = "<group>"; };
 		677440F41B5921F70006F17B /* Documentation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Documentation.html; sourceTree = "<group>"; };
 		677440F51B5921F70006F17B /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		677440F61B5921F70006F17B /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				677440EF1B57C1340006F17B /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +80,6 @@
 		677440841B56477B0006F17B = {
 			isa = PBXGroup;
 			children = (
-				677440EE1B57C1340006F17B /* CFNetwork.framework */,
 				6774408F1B56477B0006F17B /* flyrpc */,
 				677440A91B56477B0006F17B /* flyrpcTests */,
 				6774408E1B56477B0006F17B /* Products */,
@@ -145,8 +141,8 @@
 		677440B61B5649820006F17B /* flyrpc_framework */ = {
 			isa = PBXGroup;
 			children = (
-				677440EB1B57B3C50006F17B /* FlyProtocol.h */,
-				677440EC1B57B3C50006F17B /* FlyProtocol.m */,
+				677440EB1B57B3C50006F17B /* FlyRPC.h */,
+				677440EC1B57B3C50006F17B /* FlyRPC.m */,
 				677440FC1B5FA7360006F17B /* FlyPacket.h */,
 				677440FD1B5FA7360006F17B /* FlyPacket.m */,
 				67865B811B6511540070CE27 /* FlyOutResponse.h */,
@@ -277,7 +273,7 @@
 				677440FE1B5FA7360006F17B /* FlyPacket.m in Sources */,
 				67865B831B6511540070CE27 /* FlyOutResponse.m in Sources */,
 				677440FB1B5921F70006F17B /* GCDAsyncUdpSocket.m in Sources */,
-				677440ED1B57B3C50006F17B /* FlyProtocol.m in Sources */,
+				677440ED1B57B3C50006F17B /* FlyRPC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,11 +7,11 @@
 //
 
 #import "FlyOutResponse.h"
-#import "FlyProtocol.h"
+#import "FlyRPC.h"
 
 @implementation FlyOutResponse
 
--(id) initWithRequest:(FlyPacket *)request fly:(FlyProtocol *)conn {
+-(id) initWithRequest:(FlyPacket *)request fly:(FlyRPC *)conn {
     self = [super init];
     _conn = conn;
     _request = request;

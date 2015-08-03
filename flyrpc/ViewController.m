@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "FlyProtocol.h"
+#import "FlyRPC.h"
 #import "GCDAsyncSocket.h"
 
 @interface ViewController ()
@@ -22,9 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    flyProtocol = [[FlyProtocol alloc] init];
-    flyProtocol.delegate = self;
-    [flyProtocol connectToHost:@"localhost" port:3456];
+    flyrpc = [[FlyRPC alloc] init];
+    flyrpc.delegate = self;
+    [flyrpc connectToHost:@"localhost" port:3456];
     [self sayHello];
     
 /*
@@ -49,7 +49,7 @@
 
 - (void) sayHello {
     mytag += 100;
-    [flyProtocol sendRequest:@"echo" payload:[@"Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World. 12345" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:[NSString stringWithFormat:@"%lu", mytag]];
+    [flyrpc sendRequest:@"timeout" payload:[@"Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World. 12345" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:[NSString stringWithFormat:@"%lu", mytag]];
     [self performSelector:@selector(sayHello) withObject:nil afterDelay:3];
 }
 
@@ -58,24 +58,26 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) fly:(FlyProtocol *)conn didConnectToHost:(NSString *)host port:(uint16_t)port {
+- (void) rpc:(FlyRPC *)conn didConnectToHost:(NSString *)host port:(uint16_t)port {
     NSLog(@"did connect to host");
 }
 
-- (void) fly:(FlyProtocol *)conn receiveRequest:(FlyPacket *)packet {
+- (void) rpc:(FlyRPC *)conn receiveRequest:(FlyPacket *)packet {
     NSLog(@"did receiveRequest %@", packet.code);
 }
 
-- (void) fly:(FlyProtocol *)conn didReceiveResponse:(FlyPacket *)response withTag:(NSString*)tag {
+- (void) rpc:(FlyRPC *)conn didReceiveResponse:(FlyPacket *)response withTag:(NSString*)tag {
     NSString* s = [[NSString alloc]initWithData:response.payload encoding:NSUTF8StringEncoding];
     NSLog(@"did receiveResponse %@ %@", s, tag);
 }
 
-- (void) fly:(FlyProtocol *)conn didReadPacket:(FlyPacket *)packet {
+- (void) rpc:(FlyRPC *)conn didReadPacket:(FlyPacket *)packet {
     NSLog(@"did receive packet %@ %@", packet.code, packet.payload);
 }
 
-
+- (void) rpcRequestTimeout:(FlyRPC *)conn withTag:(NSString *)tag {
+    NSLog(@"fly did fail to request %@", tag);
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
