@@ -49,8 +49,8 @@
 
 - (void) sayHello {
     mytag += 100;
-    [flyrpc sendRequest:@"timeout" payload:[@"Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World. 12345" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:[NSString stringWithFormat:@"%lu", mytag]];
-    [self performSelector:@selector(sayHello) withObject:nil afterDelay:3];
+    [flyrpc sendRequest:@"timeout" payload:[@"Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World.Hello World. 12345" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:5 tag:[NSString stringWithFormat:@"%lu", mytag]];
+    [self performSelector:@selector(sayHello) withObject:nil afterDelay:20];
 }
 
 - (void)didReceiveMemoryWarning {

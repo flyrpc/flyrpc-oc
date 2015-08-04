@@ -65,12 +65,15 @@
     packet.payload = payload;
     NSNumber* seqNum = [NSNumber numberWithShort:packet.seq];
     [dictSeqToTag setObject:tag forKey: seqNum];
-    // wait timeout
-    [self performSelector:@selector(timeUp:) withObject:seqNum afterDelay:timeout];
     [self sendPacket:packet];
+    // wait timeout
+    if (timeout > 0) {
+        [self performSelector:@selector(timeUp:) withObject:seqNum afterDelay:timeout];
+    }
 }
 
 - (void) timeUp:(NSNumber*)seq {
+    NSLog(@"timeUp %@", seq);
     NSString* tag = [dictSeqToTag objectForKey:seq];
     // not responsed
     if(tag != nil) {
@@ -164,7 +167,8 @@
     if (packet.isResponse) {
         NSNumber* seq = [NSNumber numberWithShort:packet.seq];
         NSString* tag = [dictSeqToTag objectForKey:seq];
-        if ([dictSeqToTag objectForKey:seq]!=nil) {
+        NSLog(@"is response %@ %@", seq, tag);
+        if (tag!=nil) {
             if (_delegate && [_delegate respondsToSelector:@selector(rpc:didReceiveResponse:withTag:)]) {
                 [_delegate rpc:self didReceiveResponse:packet withTag:tag];
             }
